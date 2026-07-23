@@ -1,0 +1,19 @@
+resource "aws_instance" "private" {
+  ami           = local.amazon_linux_2023_ami
+  instance_type = local.instance_type
+
+  subnet_id                   = aws_subnet.private.id
+  associate_public_ip_address = false
+
+  # t3 instances are "unlimited" by default, but no need to have it in such basic project
+  credit_specification {
+    cpu_credits = "standard"
+  }
+
+  # TBA
+  # vpc_security_group_ids = [aws_security_group.private_instance.id]
+
+  tags = {
+    Name = "${var.project_name}-ec2"
+  }
+}
