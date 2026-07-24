@@ -10,8 +10,7 @@ resource "aws_instance" "private" {
     cpu_credits = "standard"
   }
 
-  # TBA
-  # vpc_security_group_ids = [aws_security_group.private_instance.id]
+  vpc_security_group_ids = [aws_security_group.ec2.id]
 
   tags = {
     Name = "${var.project_name}-ec2"

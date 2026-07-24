@@ -1,4 +1,4 @@
-resource "aws_s3_bucket" "main" {
+resource "aws_s3_bucket" "private" {
   bucket_prefix = "${var.project_name}-"
 
   tags = {
@@ -8,8 +8,8 @@ resource "aws_s3_bucket" "main" {
 
 # New S3 buckets are private by default, but good practice to add it
 # -> this allows Terraform to detect/restore changes for any of these settings
-resource "aws_s3_bucket_public_access_block" "main" {
-  bucket = aws_s3_bucket.main.id
+resource "aws_s3_bucket_public_access_block" "private" {
+  bucket = aws_s3_bucket.private.id
 
   block_public_acls       = true
   ignore_public_acls      = true
@@ -18,7 +18,7 @@ resource "aws_s3_bucket_public_access_block" "main" {
 }
 
 resource "aws_s3_object" "test_file" {
-  bucket       = aws_s3_bucket.main.id
+  bucket       = aws_s3_bucket.private.id
   key          = "test-file.txt"
   content      = "Hello from the private S3 bucket."
   content_type = "text/plain"
