@@ -1,0 +1,38 @@
+#!/bin/bash
+set -e
+
+cat > /home/ec2-user/verify-s3-access.sh <<'SCRIPT'
+#!/bin/bash
+set -e
+
+BUCKET_NAME="${bucket_name}"
+REGION="${aws_region}"
+
+echo "AWS credential source:"
+aws configure list
+
+echo
+echo "Objects in the demo bucket:"
+aws s3 ls "s3://$BUCKET_NAME" --region "$REGION"
+
+echo
+echo "Content of test-file.txt:"
+aws s3 cp "s3://$BUCKET_NAME/test-file.txt" - --region "$REGION"
+
+echo
+echo "Upload test (expected: AccessDenied):"
+echo "This upload should not be allowed." > /tmp/write-test.txt
+
+if aws s3 cp \
+  /tmp/write-test.txt \
+  "s3://$BUCKET_NAME/write-test-should-fail.txt" \
+  --region "$REGION"; then
+  echo "FAIL: write access is allowed"
+  exit 1
+else
+  echo "PASS: write access is denied"
+fi
+SCRIPT
+
+chown ec2-user:ec2-user /home/ec2-user/verify-s3-access.sh
+chmod 0700 /home/ec2-user/verify-s3-access.sh

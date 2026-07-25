@@ -14,6 +14,11 @@ resource "aws_instance" "private" {
 
   iam_instance_profile = aws_iam_instance_profile.s3_reader.name
 
+  user_data = templatefile("${path.module}/scripts/user-data.sh.tftpl", {
+    bucket_name = aws_s3_bucket.private.id
+    aws_region  = var.region
+  })
+
   tags = {
     Name = "${var.project_name}-ec2"
   }
