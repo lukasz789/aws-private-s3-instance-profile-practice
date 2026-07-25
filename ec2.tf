@@ -12,6 +12,8 @@ resource "aws_instance" "private" {
 
   vpc_security_group_ids = [aws_security_group.ec2.id]
 
+  iam_instance_profile = aws_iam_instance_profile.s3_reader.name
+
   tags = {
     Name = "${var.project_name}-ec2"
   }
