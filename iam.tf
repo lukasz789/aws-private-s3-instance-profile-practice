@@ -1,3 +1,6 @@
+# ------------------------------------------------------------------------------
+# EC2 trust policy and IAM role
+# ------------------------------------------------------------------------------
 data "aws_iam_policy_document" "ec2_assume_role" {
   statement {
     effect  = "Allow"
@@ -19,6 +22,9 @@ resource "aws_iam_role" "s3_reader" {
   }
 }
 
+# ------------------------------------------------------------------------------
+# S3 read-only permissions for IAM Role
+# ------------------------------------------------------------------------------
 data "aws_iam_policy_document" "s3_read_only" {
   statement {
     sid     = "ListPrivateBucket"
@@ -43,6 +49,9 @@ resource "aws_iam_role_policy" "s3_read_only" {
   policy = data.aws_iam_policy_document.s3_read_only.json
 }
 
+# ------------------------------------------------------------------------------
+# EC2 instance profile
+# ------------------------------------------------------------------------------
 resource "aws_iam_instance_profile" "s3_reader" {
   name = "${var.project_name}-s3-reader"
   role = aws_iam_role.s3_reader.name
