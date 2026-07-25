@@ -1,2 +1,2 @@
 region            = "eu-central-1"
-project_name      = "aws-private-s3-instance-profile-practice"
+project_name      = "aws-private-s3-ec2-practice"
