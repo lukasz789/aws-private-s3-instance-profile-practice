@@ -31,6 +31,22 @@ The infrastructure contains:
 - Separate security groups for the EC2 instance and the EC2 Instance Connect
   Endpoint
 
+### Routing
+
+| Route table | Associated subnet | Destination | Target |
+|---|---|---|---|
+| Private | `10.0.0.32/27` | `10.0.0.0/24` | Local VPC route |
+| Private | `10.0.0.32/27` | Amazon S3 prefix list | S3 Gateway Endpoint |
+
+The local route provides connectivity within the VPC, including traffic between
+the EC2 Instance Connect Endpoint and the private EC2 instance. The endpoint
+route sends traffic matching the Amazon S3 prefix list through the S3
+Gateway Endpoint.
+
+The route table intentionally has no `0.0.0.0/0` route. As a result, the EC2
+instance has no general outbound internet access, while Amazon S3 remains
+reachable through the private endpoint route.
+
 SSH traffic follows this path:
 
 ```text
